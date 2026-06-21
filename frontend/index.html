@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduGenius - Smart Resume & Cover Letter Analyzer</title>
+    
+    <!-- Google Fonts & Icon Packs -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Markdown Parser (Marked) -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="glow-bg"></div>
+    
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="logo-area">
+                <div class="logo-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                <div>
+                    <h1>EduGenius</h1>
+                    <p class="subtitle">Smart Resume & Cover Letter Analyzer (LangChain & LangGraph)</p>
+                </div>
+            </div>
+            <div class="status-badge" id="envStatus">
+                <span class="indicator-dot green"></span> Backend Terhubung
+            </div>
+        </header>
+
+        <main class="app-content">
+            <!-- Left Side: Input Panel -->
+            <section class="panel input-panel">
+                <div class="panel-header">
+                    <h2><i class="fa-solid fa-file-invoice"></i> Input Dokumen</h2>
+                    <span class="step-label">Langkah 1</span>
+                </div>
+                
+                <div class="input-group">
+                    <label for="cvInput">Teks CV / Resume</label>
+                    <textarea id="cvInput" placeholder="Tempelkan (paste) teks CV atau Resume Anda di sini..." required></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label for="jdInput">Deskripsi Pekerjaan (Job Description)</label>
+                    <textarea id="jdInput" placeholder="Tempelkan deskripsi pekerjaan atau kriteria lowongan di sini..." required></textarea>
+                </div>
+
+                <button id="btnAnalyze" class="btn btn-primary btn-glow">
+                    <i class="fa-solid fa-magnifying-glass-chart"></i> Mulai Analisis & Pembuatan
+                </button>
+            </section>
+
+            <!-- Right Side: Workflow & Output Panel -->
+            <section class="panel output-panel">
+                <div class="panel-header">
+                    <h2><i class="fa-solid fa-chart-line"></i> Dashboard Hasil & Visualizer</h2>
+                    <span class="step-label" id="flowStep">Langkah 2</span>
+                </div>
+
+                <!-- Visualizer Alur LangGraph -->
+                <div class="graph-visualizer">
+                    <h3>Alur Kerja LangGraph (Stateful Agent)</h3>
+                    <div class="nodes-container">
+                        <div class="node" id="node-input">
+                            <div class="node-icon"><i class="fa-solid fa-file-arrow-up"></i></div>
+                            <span>Input</span>
+                        </div>
+                        <div class="node-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+                        
+                        <div class="node" id="node-analyzer">
+                            <div class="node-icon"><i class="fa-solid fa-robot"></i></div>
+                            <span>CV Analyzer</span>
+                        </div>
+                        <div class="node-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+                        
+                        <div class="node" id="node-generator">
+                            <div class="node-icon"><i class="fa-solid fa-pen-nib"></i></div>
+                            <span>CL Generator</span>
+                        </div>
+                        <div class="node-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+                        
+                        <div class="node" id="node-human">
+                            <div class="node-icon"><i class="fa-solid fa-user-check"></i></div>
+                            <span>Human Feedback</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Output Tabs -->
+                <div class="tabs-container">
+                    <div class="tabs">
+                        <button class="tab-btn active" data-tab="tab-analysis">
+                            <i class="fa-solid fa-chart-pie"></i> Hasil Analisis ATS
+                        </button>
+                        <button class="tab-btn" data-tab="tab-cl">
+                            <i class="fa-solid fa-envelope-open-text"></i> Draf Cover Letter
+                        </button>
+                    </div>
+
+                    <div class="tab-content active" id="tab-analysis">
+                        <div class="welcome-placeholder" id="placeholder-analysis">
+                            <i class="fa-solid fa-chart-simple"></i>
+                            <p>Masukkan CV dan Deskripsi Lowongan di sebelah kiri, kemudian klik tombol "Mulai Analisis".</p>
+                        </div>
+                        <div class="markdown-body hidden" id="analysisContent"></div>
+                    </div>
+
+                    <div class="tab-content" id="tab-cl">
+                        <div class="welcome-placeholder" id="placeholder-cl">
+                            <i class="fa-solid fa-envelope"></i>
+                            <p>Cover Letter kustom akan muncul di sini setelah proses analisis selesai.</p>
+                        </div>
+                        <div class="markdown-body hidden" id="clContent"></div>
+                        <div class="action-buttons hidden" id="clActions">
+                            <button id="btnCopyCl" class="btn btn-secondary"><i class="fa-solid fa-copy"></i> Salin ke Clipboard</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Human in the loop Interaction Section -->
+                <div class="feedback-panel hidden" id="feedbackPanel">
+                    <div class="feedback-header">
+                        <h3><i class="fa-solid fa-comments"></i> Umpan Balik Pengguna (Human-in-the-Loop Interrupt)</h3>
+                        <p>Alur agen di-jeda sementara. Anda dapat menyetujui draf atau meminta revisi khusus.</p>
+                    </div>
+                    <div class="feedback-input-group">
+                        <input type="text" id="feedbackInput" placeholder="Contoh: 'Tambahkan keahlian Python saya di paragraf kedua' atau 'Buat nada tulisan lebih persuasif'..." />
+                        <button id="btnSubmitFeedback" class="btn btn-primary"><i class="fa-solid fa-paper-plane"></i> Kirim Masukan</button>
+                        <button id="btnApprove" class="btn btn-success"><i class="fa-solid fa-circle-check"></i> Setujui & Selesai</button>
+                    </div>
+                    <div class="revision-counter">
+                        Jumlah revisi saat ini: <span id="revisionCount">0</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Alert / Toast -->
+    <div id="toast" class="toast hidden"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>

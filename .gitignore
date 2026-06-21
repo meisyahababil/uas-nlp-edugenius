@@ -1,0 +1,45 @@
+# ========================
+# FILE RAHASIA - JANGAN COMMIT
+# ========================
+.env
+
+# ========================
+# PYTHON
+# ========================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Virtual Environment
+venv/
+env/
+ENV/
+.venv/
+
+# ========================
+# IDE & EDITOR
+# ========================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ========================
+# OS FILES
+# ========================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ========================
+# LOGS
+# ========================
+*.log
+logs/
