@@ -293,18 +293,18 @@ LANGCHAIN_PROJECT=resume-...     # ← Nama project di dashboard
 
 | | |
 |--|--|
-| **Nama** | *(Isi nama kamu)* |
-| **NIM** | *(Isi NIM kamu)* |
+| **Nama** | *Meisyah Ababil* |
+| **NIM** | *233510092* |
 | **Mata Kuliah** | Natural Language Processing (NLP) |
-| **Semester** | *(Isi semester)* |
-| **Dosen Pengampu** | *(Isi nama dosen)* |
+| **Semester** | *6 (enam)* |
+| **Dosen Pengampu** | *Prof.Dr. Arbi Haza Nasution,B.IT (Hons), M.IT* |
 
 ---
 
 <div align="center">
 
-**⭐ Jika proyek ini bermanfaat, jangan lupa beri bintang di GitHub! ⭐**
+**⭐ Jika proyek ini bagus, jangan lupa beri bintang di GitHub yaaa semuanyaaa! ⭐**
 
-*Dibuat dengan ❤️ untuk UAS NLP*
+*Dibuat dengan ❤️ untuk UAS NLP inii, bismillahhh*
 
 </div>
